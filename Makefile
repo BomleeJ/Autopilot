@@ -21,11 +21,7 @@ SRC = test.cpp
 
 all: $(TARGET)
 	
-$(TARGET): plugin.o
-	$(CXX) -bundle plugin.o $(LDFLAGS) -o $(TARGET)
-
-plugin.o: $(SRC)
-	$(CXX) -c $(CXXFLAGS) $(SRC) -o plugin.o
-
+$(TARGET): $(SRC)
+	$(CXX) $(CXXFLAGS) $(SRC) -bundle $(LDFLAGS) -o $(TARGET)
 clean:
 	rm -f *.o *.xpl
