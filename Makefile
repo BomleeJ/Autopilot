@@ -24,6 +24,6 @@ IMPLFiles = $(wildcard src/*.cpp)
 all: $(TARGET)
 	
 $(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) $(IMPLFiles) -bundle $(LDFLAGS) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(SRC) $(IMPLFiles)  -bundle $(LDFLAGS) -o $(TARGET)
 clean:
 	rm -f *.o *.xpl

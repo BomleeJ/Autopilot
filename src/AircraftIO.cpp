@@ -1,92 +1,66 @@
 #include "AircraftIO.h"
-#include "Types.h"
+#include "Logger.h"
 #include "nlohmann/json.hpp"
 #include "XPLMProcessing.h"
-#include <type_traits>
+#include "XPLMUtilities.h"
+#include "XPLMDataAccess.h"
 #include <fstream>
 #include <string>
 #include <map>
+#include <exception>
 
+AircraftIO::AircraftIO(const std::string& filename)
+{
+    try {
+        loadJsonFile(filename);
+        XPLMDebugString("LOADUP: Json Parsed No issues \n");
+        
+    } 
+    catch (const std::exception& e)
+    {
+        XPLMDebugString("ERROR: LOADING json: ");
+        XPLMDebugString(e.what());
+        XPLMDebugString("\n");
+        exit(1);
+    }
+    
+}
 
-XPLMDataRef AircraftIO::getDataRefString(const std::string& primary_key, const std::string& secondary_key) 
+XPLMDataRef AircraftIO::getDataRefPointer(const std::string& primary_key, const std::string& secondary_key) 
 {
    /*TODO MAYBE PUT IN TRY / CATCH block*/
-    std::string dataref_string = dataref_schema.at(primary_key)
+   std::string dataref_string;
+   try {
+    dataref_string = dataref_schema.at(primary_key)
                                     .at(secondary_key)
                                     .get<std::string>();
+    } catch (std::exception& e)
+    {
+        XPLMDebugString("ERROR AircrafIO.cpp");
+        XPLMDebugString(e.what());
+        XPLMDebugString("\n");
+        exit(1);
+    }                           
     
     XPLMDataRef opaqueDataRef;
     auto it = DataRefCache.find(dataref_string);
     if (it == DataRefCache.end())
     {
         opaqueDataRef = XPLMFindDataRef(dataref_string.c_str());
+        DataRefCache[dataref_string] = opaqueDataRef;
     }
     else
     {
-        opaqueDataRef = *it;
+        opaqueDataRef = (*it).second;
     }
     return opaqueDataRef;
     
 }
 
-void AircraftIO::loadJsonFile(const std::string& primary_key, const std::string& secondary_key) 
+void AircraftIO::loadJsonFile(const std::string& filename) 
 {
     // Reads Json and loads datarefs into memory
     std::ifstream f(filename);
     dataref_schema = json::parse(f); 
 }
 
-template <typename T>
-T AircraftIO::getDataRefValue(const std::string& primary_key, const std::string& secondary_key) 
-{
-    // TEST FOR CONST CORRECTNESS
-    XPLMDataRef dataref = getDataRefPointer(primary_key, secondary_key)
-
-    if constexpr (std::is_same<T, float>)
-    {
-        return XPLMGetDataf(dataref);
-    }
-    else if (std::is_same<T, double>)
-    {
-        return XPLMGetDatad(dataref);
-    }
-    elif (std::is_same<T, int>)
-    {
-        return XPLMGetDatai(dataref);
-    }
-    else
-    {
-        // Throw
-        XPLMDebugString("ERROR: getDataRefValue<T> not implemented for type T");
-    }
-
-    return 0;
-}
-
-template <typename T>
-T AircraftIO::setDataRefValue(const std::string& primary_key, const std::string& secondary_key, T inValue)
-{
-    XPLMDataRef dataref = getDataRefPointer(primary_key, secondary_key);
-
-    if constexpr (std::is_same<T, float>)
-    {
-        XPLMSetDataf(dataref, inValue);
-    }
-    else if (std::is_same<T, double>)
-    {
-        XPLMSetDatad(dataref, inValue);
-    }
-    else if (std::is_same<T, int>)
-    {
-        XPLMSetDatai(dataref, inValue);
-    }
-    else
-    {
-        // Throw
-        XPLMDebugString("ERROR: setDataRefValue<T> not implemented for type T\n");
-        XPLMDebugString(("Type: " + std::string(typeid(T).name()) + "\n").c_str());
-        XPLMDebugString(("Secondary Key: " + secondary_key + "\n").c_str());
-    }
-
-    return 0;
-}

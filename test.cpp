@@ -32,14 +32,18 @@
 
 // FlightLoop callbacks
 XPLM_API XPLMFlightLoopID XPLMCreateFlightLoop(XPLMCreateFlightLoop_t * inParams);
-FILE* logFile;
 
 
 XPLMFlightLoopID flightLoopID;
+AircraftIO val = AircraftIO("datarefs.json");
 
 float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void * inRefcon) {
 	
-	XPLMDebugString("WE ARE INSIDE THE CALLBACK");
+	
+	XPLMDebugString("WE ARE INSIDE THE CALLBACK AGL: ");
+	float agl = val.getDataRefValue<float>("altitude", "agl_ft");
+	std::string flt = std::to_string(agl);
+	XPLMDebugString(flt.c_str());
 	return 1.0;
 }
 
@@ -49,10 +53,11 @@ PLUGIN_API int XPluginStart(
 							char *		outSig,
 							char *		outDesc)
 {
+	
 	strcpy(outName, "C172 Autopilot");
 	strcpy(outSig, "xpsdk.autopilot.c172");
 	strcpy(outDesc, "An experimental autopilot system plugin for the Cessna 172, built with XPLM300 SDK.");
-	logFile = fopen("Kumalautomation.txt", "w");
+	
 	typedef float (* XPLMFlightLoop_f)(
 		float                inElapsedSinceLastCall,
 		float                inElapsedTimeSinceLastFlightLoop,
@@ -75,7 +80,6 @@ PLUGIN_API int XPluginStart(
 PLUGIN_API void	XPluginStop(void)
 {	
 	
-	fclose(logFile);
 	XPLMDestroyFlightLoop(flightLoopID);
 	XPLMDebugString("WE HAVE STOPPED THE PLUGIN\n");
 	return;
