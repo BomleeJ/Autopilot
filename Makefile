@@ -19,10 +19,11 @@ LDFLAGS = -arch x86_64 \
 
 TARGET = plugin.xpl
 SRC = test.cpp
+IMPLFiles = $(wildcard src/*.cpp)
 
 all: $(TARGET)
 	
 $(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) -bundle $(LDFLAGS) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(SRC) $(IMPLFiles) -bundle $(LDFLAGS) -o $(TARGET)
 clean:
 	rm -f *.o *.xpl
