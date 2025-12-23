@@ -7,7 +7,8 @@ CXXFLAGS = -std=c++17 -fPIC -O2 \
            -arch x86_64 \
            -DAPL=1 -DXPLM200 -DXPLM210 -DXPLM300 -DXPLM301 \
            -I$(XPLANE_SDK)/CHeaders/XPLM \
-           -I$(XPLANE_SDK)/CHeaders/Widgets
+           -I$(XPLANE_SDK)/CHeaders/Widgets \
+           -I$(shell brew --prefix nlohmann-json)/include -I$(MAKEFILE_DIR)/include
 
 LDFLAGS = -arch x86_64 \
           -F/Users/omarjingoisemperor/Desktop/XplaneDev/SDK/Libraries/Mac \

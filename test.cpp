@@ -9,6 +9,7 @@
 #include "XPLMGraphics.h"
 #include "XPLMUtilities.h"
 #include "XPLMProcessing.h"
+#include "AircraftIO.h"
 #include <stdio.h>
 #include <string.h>
 #if IBM

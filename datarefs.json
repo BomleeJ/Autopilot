@@ -1,0 +1,45 @@
+{
+      "altitude": {
+        "msl_ft": "sim/cockpit2/gauges/indicators/altitude_ft_stby",
+        "agl_ft": "sim/flightmodel2/position/y_agl",
+        "radio_alt_ft": "sim/cockpit2/gauges/indicators/radio_altimeter_height_ft_pilot",
+        "landing_alt_msl_ft": "sim/cockpit2/radios/indicators/landing_alt_pilot"
+      },
+      "attitude": {
+        "pitch_deg": "sim/flightmodel/position/theta",
+        "roll_deg": "sim/flightmodel/position/phi",
+        "true_heading_deg": "sim/flightmodel/position/psi"
+      },
+      "flight_path": {
+        "hpath_deg": "sim/flightmodel2/position/hpath",
+        "vpath_deg": "sim/flightmodel2/position/vpath"
+      },
+      "speed": {
+        "true_airspeed_mps": "sim/flightmodel2/position/true_airspeed",
+        "ground_speed_mps": "sim/flightmodel2/position/groundspeed",
+        "vertical_speed_fpm": "sim/flightmodel/position/vh_ind_fpm"
+      },
+      "position": {
+        "latitude_deg": "sim/flightmodel/position/latitude",
+        "longitude_deg": "sim/flightmodel/position/longitude"
+      },
+      "controls": {
+        "pitch_ratio": "sim/flightmodel2/controls/pitch_ratio",
+        "roll_ratio": "sim/flightmodel2/controls/roll_ratio",
+        "yaw_ratio": "sim/flightmodel2/controls/heading_ratio",
+        "speedbrake_ratio": "sim/flightmodel2/controls/speedbrake_ratio"
+      },
+      "cockpit_controls": {
+        "yoke_pitch_ratio": "sim/cockpit2/controls/yoke_pitch_ratio",
+        "yoke_roll_ratio": "sim/cockpit2/controls/yoke_roll_ratio",
+        "yoke_heading_ratio": "sim/cockpit2/controls/yoke_heading_ratio",
+        "throttle_ratio": "sim/cockpit2/engine/actuators/throttle_ratio_all",
+        "brake_ratio": "sim/cockpit2/controls/parking_brake_ratio",
+        "flap_ratio": "sim/cockpit2/controls/flap_handle_request_ratio",
+        "gear_handle_down": "sim/cockpit2/controls/gear_handle_down"
+      },
+      "gear": {
+        "tire_steer_deg": "sim/flightmodel2/gear/tire_steer_command_deg",
+        "on_ground": "sim/flightmodel2/gear/on_ground"
+      }
+  }
