@@ -47,7 +47,17 @@ float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFli
 	return 1.0;
 }
 
-
+void createFlightLoop() {
+	XPLMFlightLoop_f flightLoopCallback = myFlightLoop;
+	XPLMCreateFlightLoop_t flightLoopParams;
+	XPLMDebugString("WE ARE CREATING THE FLIGHT LOOP\n");
+	flightLoopParams.structSize = sizeof(XPLMCreateFlightLoop_t);
+	flightLoopParams.phase = 0;
+	flightLoopParams.callbackFunc = flightLoopCallback;
+	flightLoopParams.refcon = NULL;
+	flightLoopID = XPLMCreateFlightLoop(&flightLoopParams);
+	XPLMScheduleFlightLoop(flightLoopID, 1.0, 0);
+}
 PLUGIN_API int XPluginStart(
 							char *		outName,
 							char *		outSig,
@@ -58,21 +68,7 @@ PLUGIN_API int XPluginStart(
 	strcpy(outSig, "xpsdk.autopilot.c172");
 	strcpy(outDesc, "An experimental autopilot system plugin for the Cessna 172, built with XPLM300 SDK.");
 	
-	typedef float (* XPLMFlightLoop_f)(
-		float                inElapsedSinceLastCall,
-		float                inElapsedTimeSinceLastFlightLoop,
-		int                  inCounter,
-		void *               inRefcon); // Callback function
-
-	XPLMFlightLoop_f flightLoopCallback = myFlightLoop;
-	XPLMCreateFlightLoop_t flightLoopParams;
-	XPLMDebugString("WE ARE CREATING THE FLIGHT LOOP\n");
-	flightLoopParams.structSize = sizeof(XPLMCreateFlightLoop_t);
-	flightLoopParams.phase = 0;
-	flightLoopParams.callbackFunc = flightLoopCallback;
-	flightLoopParams.refcon = NULL;
-	flightLoopID = XPLMCreateFlightLoop(&flightLoopParams);
-	XPLMScheduleFlightLoop(flightLoopID, 1.0, 0);
+	createFlightLoop();
 	return 1;
 	
 }
