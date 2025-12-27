@@ -1,3 +1,5 @@
+#pragma once
+
 using Feet = float;
 using Knots = float;
 using FeetPerMinute = float;

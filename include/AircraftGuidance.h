@@ -1,3 +1,4 @@
+#pragma once
 #include "Types.h"
 #include <optional>
 /*WHERE WE WANT AIRCRAFT TO GO*/
@@ -9,14 +10,13 @@ struct KinematicsTargets {
 
 struct AttitudeTargets {
     std::optional<Degrees> pitch_deg;
-    std::optional<Degrees> roll_deg;
     std::optional<Degrees> true_heading_deg;
-    std::optional<Degrees> vpath_pitch;
+    std::optional<Degrees> flight_path_heading_deg;
+    std::optional<Degrees> flight_path_pitch_deg;
 };
 
 struct ConfigurationTargets {
-    bool gear_deployed;
-    bool on_ground;
+   bool gear_deployed;
    std::optional<ControlPosition> flaps_position;
 };
 
@@ -32,3 +32,4 @@ struct AircraftGuidance {
     ConfigurationTargets configuration_targets;
     PositionTargets position_targets;
 };
+

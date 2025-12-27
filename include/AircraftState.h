@@ -1,3 +1,4 @@
+#pragma once
 #include "Types.h"
 
 struct Kinematics {
@@ -7,10 +8,12 @@ struct Kinematics {
 };
 
 struct Attitude {
-    Degrees pitch_deg; // True pitch
+    Degrees pitch_deg; //  PITCH
+    Degrees true_heading;
     Degrees roll_deg;
-    Degrees true_heading_deg; // True Heading of FLIGHT PATH
-    Degrees vpath_pitch;
+    Degrees flight_path_heading_deg; // True Heading of FLIGHT PATH
+    Degrees flight_path_pitch_deg; // Pitch of FLIGHT PATH
+    
 };
 
 struct AircraftConfiguration {
