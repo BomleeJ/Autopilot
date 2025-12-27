@@ -2,6 +2,17 @@
 
 #include "Types.h"
 #include <optional>
+#include <vector>
+#include "AircraftState.h"
+#include <optional>
+/*
+Navigation Manager
+
+gets Flight Status and Aircraft State
+
+Depends on that it will either return a waypoint or a null pointer
+
+*/
 
 struct Waypoint {
     Latitude latitude;
@@ -15,4 +26,22 @@ struct Waypoint {
         std::optional<Feet> in_altitude_msl_ft = std::nullopt, 
         std::optional<Feet> in_altitude_agl_ft = std::nullopt
     );
+};
+
+class NavigationManager {
+    private:
+    std::vector<Waypoint> waypoints;
+    size_t currWaypointIdx;
+    bool activated;
+    
+    size_t getClosestWaypointIdx(Latitude latitude, Longitude longitude);
+    bool isCompleted();
+    Degrees calculateHeadingToWaypoint(Latitude latitude, Longitude longitude, const Waypoint* destinationWaypoint = nullptr) const;
+    Kilometers calculateDistanceToWaypoint(Latitude aircraftLatitude, Longitude aircraftLongitude, const Waypoint* destinationWaypoint = nullptr) const;
+    
+    public:
+    NavigationManager(const std::string& filename);
+    std::optional<Waypoint> getCurrentWaypoint(AircraftState& aircraft_state);
+    
+
 };
