@@ -36,12 +36,12 @@ class NavigationManager {
     
     size_t getClosestWaypointIdx(Latitude latitude, Longitude longitude);
     bool isCompleted();
-    Degrees calculateHeadingToWaypoint(Latitude latitude, Longitude longitude, const Waypoint* destinationWaypoint = nullptr) const;
+    
     Kilometers calculateDistanceToWaypoint(Latitude aircraftLatitude, Longitude aircraftLongitude, const Waypoint* destinationWaypoint = nullptr) const;
     
     public:
     NavigationManager(const std::string& filename);
-    std::optional<Waypoint> getCurrentWaypoint(AircraftState& aircraft_state);
-    
+    std::optional<Waypoint> getCurrentWaypoint(const AircraftState& aircraft_state);
+    static Degrees calculateHeadingToWaypoint(Latitude latitude, Longitude longitude, const Waypoint* destinationWaypoint = nullptr);
 
 };

@@ -5,7 +5,6 @@
 #include "XPLMUtilities.h"
 #include "XPLMDataAccess.h"
 #include <type_traits>
-#include <fstream>
 #include <string>
 #include <map>
 
@@ -16,7 +15,6 @@ class AircraftIO {
     std::map<std::string, XPLMDataRef> DataRefCache;
 
     XPLMDataRef getDataRefPointer(const std::string& primary_key, const std::string& secondary_key);
-    void loadJsonFile(const std::string& filename);
     
     public:
 
