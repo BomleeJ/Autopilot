@@ -14,8 +14,8 @@ using json = nlohmann::json;
 Waypoint::Waypoint(
     Latitude in_latitude, 
     Longitude in_longitude, 
-    std::optional<Feet> in_altitude_msl_ft, 
-    std::optional<Feet> in_altitude_agl_ft
+    std::optional<Feet> altitude_msl_ft, 
+    std::optional<Feet> altitude_agl_ft
 ) : 
 latitude(in_latitude), 
 longitude(in_longitude), 
@@ -106,7 +106,7 @@ std::optional<Waypoint> NavigationManager::getCurrentWaypoint(AircraftState& air
     return waypoints[currWaypointIdx];
 }
 
-Degrees NavigationManager::calculateHeadingToWaypoint(Latitude aircraftLatitude, Longitude aircraftLongitude, const Waypoint* destinationWaypoint) const
+static Degrees NavigationManager::calculateHeadingToWaypoint(Latitude aircraftLatitude, Longitude aircraftLongitude, const Waypoint* destinationWaypoint)
 {
     if (destinationWaypoint == nullptr) {
         destinationWaypoint = &waypoints[currWaypointIdx];

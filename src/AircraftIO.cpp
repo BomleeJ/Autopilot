@@ -1,5 +1,4 @@
 #include "AircraftIO.h"
-#include "Logger.h"
 #include "nlohmann/json.hpp"
 #include "XPLMProcessing.h"
 #include "XPLMUtilities.h"
@@ -8,11 +7,12 @@
 #include <string>
 #include <map>
 #include <exception>
+#include "JsonLoader.h"
 
 AircraftIO::AircraftIO(const std::string& filename)
 {
     try {
-        loadJsonFile(filename);
+        dataref_schema = JsonLoader::loadJsonFile(filename);
         XPLMDebugString("LOADUP: Json Parsed No issues \n");
         
     } 
@@ -55,12 +55,5 @@ XPLMDataRef AircraftIO::getDataRefPointer(const std::string& primary_key, const 
     }
     return opaqueDataRef;
     
-}
-
-void AircraftIO::loadJsonFile(const std::string& filename) 
-{
-    // Reads Json and loads datarefs into memory
-    std::ifstream f(filename);
-    dataref_schema = json::parse(f); 
 }
 
