@@ -62,9 +62,9 @@ void AircraftIO::updateAttitude(AircraftState& aircraft_state)
 
 void AircraftIO::updateConfiguration(AircraftState& aircraft_state)
 {
-    aircraft_state.configuration.gear_deployed = getDataRefValue<float>("gear", "gear_deployed");
-    aircraft_state.configuration.on_ground = getDataRefValue<float>("configuration", "on_ground");
-    aircraft_state.configuration.flaps_position = getDataRefValue<float>("configuration", "flaps_position");
+    aircraft_state.configuration.gear_deployed = (bool) getDataRefValue<int>("gear", "gear_deployed");
+    aircraft_state.configuration.on_ground = (bool) getDataRefValue<int>("gear", "on_ground");
+    aircraft_state.configuration.flaps_position = (float)getDataRefValue<float>("cockpit_controls", "flap_ratio");
 }
 
 void AircraftIO::updateActuators(AircraftState& aircraft_state)
@@ -79,8 +79,8 @@ void AircraftIO::updatePosition(AircraftState& aircraft_state)
 {
     aircraft_state.position.latitude = getDataRefValue<float>("position", "latitude_deg");
     aircraft_state.position.longitude = getDataRefValue<float>("position", "longitude_deg");
-    aircraft_state.position.altitude_msl_ft = getDataRefValue<float>("position", "altitude_msl_ft");
-    aircraft_state.position.altitude_agl_ft = getDataRefValue<float>("position", "altitude_agl_ft");
+    aircraft_state.position.altitude_msl_ft = getDataRefValue<float>("altitude", "msl_ft");
+    aircraft_state.position.altitude_agl_ft = getDataRefValue<float>("altitude", "agl_ft");
 }
 
 XPLMDataRef AircraftIO::getDataRefPointer(const std::string& primary_key, const std::string& secondary_key) 
