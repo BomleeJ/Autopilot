@@ -47,7 +47,7 @@ bool FlightStateManager::shouldTransitionToInitialClimb(const AircraftState& air
     if (current_state != FlightState::TAKEOFF_ROLL) {
         return false;
     }
-    return aircraft_state.kinematics.indicated_airspeed_mps > knotsToMetersPerSecond(cessna172_VRoateSpeed);
+    return aircraft_state.kinematics.indicated_airspeed_knots > cessna172_VRoateSpeed;
 }
 
 bool FlightStateManager::shouldTransitionToClimbToAltitude(const AircraftState& aircraft_state) const {
@@ -71,7 +71,7 @@ inline MetersPerSecond FlightStateManager::knotsToMetersPerSecond(Knots knots) c
 void FlightStateManager::setGuidanceForTakeoffRoll(const AircraftState& aircraft_state) {
     KinematicsTargets kinematics_targets;
     kinematics_targets.vertical_speed_fpm = 900;
-    kinematics_targets.indicated_airspeed_mps = knotsToMetersPerSecond(cessna172_VRoateSpeed);
+    kinematics_targets.indicated_airspeed_knots = cessna172_VRoateSpeed;
     guidance.kinematics_targets = kinematics_targets;
 
     AttitudeTargets attitude_targets;
@@ -100,7 +100,7 @@ void FlightStateManager::setGuidanceForTakeoffRoll(const AircraftState& aircraft
 void FlightStateManager::setGuidanceForInitialClimb(const AircraftState& aircraft_state) {
     KinematicsTargets kinematics_targets;
     kinematics_targets.vertical_speed_fpm = cessna172_InitialClimbRateFpm;
-    kinematics_targets.indicated_airspeed_mps = knotsToMetersPerSecond(cessna172_CruiseSpeed);
+    kinematics_targets.indicated_airspeed_knots = cessna172_CruiseSpeed;
     guidance.kinematics_targets = kinematics_targets;
 
     AttitudeTargets attitude_targets;
@@ -128,7 +128,7 @@ void FlightStateManager::setGuidanceForInitialClimb(const AircraftState& aircraf
 void FlightStateManager::setGuidanceForClimbToAltitude(const std::optional<Waypoint>& waypoint, const AircraftState& aircraft_state) {
     KinematicsTargets kinematics_targets;
     kinematics_targets.vertical_speed_fpm = cessna172_ClimbToAltitudeRateFpm;
-    kinematics_targets.indicated_airspeed_mps = knotsToMetersPerSecond(cessna172_CruiseSpeed);
+    kinematics_targets.indicated_airspeed_knots = cessna172_CruiseSpeed;
     guidance.kinematics_targets = kinematics_targets;
 
     AttitudeTargets attitude_targets;
@@ -169,7 +169,7 @@ void FlightStateManager::setGuidanceForClimbToAltitude(const std::optional<Waypo
 void FlightStateManager::setGuidanceForCruise(const std::optional<Waypoint>& waypoint, const AircraftState& aircraft_state) {
     KinematicsTargets kinematics_targets;
     kinematics_targets.vertical_speed_fpm = std::nullopt;
-    kinematics_targets.indicated_airspeed_mps = knotsToMetersPerSecond(cessna172_CruiseSpeed);
+    kinematics_targets.indicated_airspeed_knots = cessna172_CruiseSpeed;
     guidance.kinematics_targets = kinematics_targets;
 
     AttitudeTargets attitude_targets;

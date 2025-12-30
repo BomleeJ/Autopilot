@@ -14,8 +14,8 @@ using json = nlohmann::json;
 Waypoint::Waypoint(
     Latitude in_latitude, 
     Longitude in_longitude, 
-    std::optional<Feet> altitude_msl_ft, 
-    std::optional<Feet> altitude_agl_ft
+    std::optional<Feet> in_altitude_msl_ft, 
+    std::optional<Feet> in_altitude_agl_ft
 ) : 
 latitude(in_latitude), 
 longitude(in_longitude), 
@@ -30,10 +30,10 @@ altitude_agl_ft(in_altitude_agl_ft)
     if (in_longitude < -180.0 || in_longitude > 180.0) {
         throw std::invalid_argument("Longitude must be between -180 and 180 degrees");
     }
-    if (in_altitude_msl_ft.has_value() && in_altitude_msl_ft.value() < -3000.0f) {
+    if (altitude_msl_ft.has_value() && altitude_msl_ft.value() < -3000.0f) {
         throw std::invalid_argument("Altitude MSL must be greater than -3000 feet");
     }
-    if (in_altitude_agl_ft.has_value() && in_altitude_agl_ft.value() < 0.0f) {
+    if (altitude_agl_ft.has_value() && altitude_agl_ft.value() < 0.0f) {
         throw std::invalid_argument("Altitude AGL must be greater than 0 feet");
     }
     } 
@@ -84,7 +84,7 @@ inline bool NavigationManager::isCompleted()
     return currWaypointIdx >= waypoints.size();
 }
 
-std::optional<Waypoint> NavigationManager::getCurrentWaypoint(AircraftState& aircraft_state)
+std::optional<Waypoint> NavigationManager::getCurrentWaypoint(const AircraftState& aircraft_state)
 {
     Latitude latitude = aircraft_state.position.latitude;
     Longitude longitude = aircraft_state.position.longitude;
@@ -106,10 +106,12 @@ std::optional<Waypoint> NavigationManager::getCurrentWaypoint(AircraftState& air
     return waypoints[currWaypointIdx];
 }
 
-static Degrees NavigationManager::calculateHeadingToWaypoint(Latitude aircraftLatitude, Longitude aircraftLongitude, const Waypoint* destinationWaypoint)
+Degrees NavigationManager::calculateHeadingToWaypoint(Latitude aircraftLatitude, Longitude aircraftLongitude, const Waypoint* destinationWaypoint)
 {
     if (destinationWaypoint == nullptr) {
-        destinationWaypoint = &waypoints[currWaypointIdx];
+        throw std::invalid_argument("Destination waypoint is nullptr");
+        XPLMDebugString("ERROR: NavigationManager::calculateHeadingToWaypoint: Destination waypoint is nullptr\n");
+        exit(1);
     }
 
     const float PI = 3.14159265358979323846f;
