@@ -12,15 +12,18 @@ FeetPerMinute cessna172_ClimbToAltitudeRateFpm = 700;
 Feet cessna172_InitialClimbAltitudeFt = 800;
 Feet cessna172_CruiseAltitudeFt = 8500;
 
-FlightStateManager::FlightStateManager(const AircraftState& aircraft_state) {
+FlightStateManager::FlightStateManager(): activated(false) {
     current_state = FlightState::TAKEOFF_ROLL;
-    setGuidanceForTakeoffRoll(aircraft_state);
 }
 
 AircraftGuidance FlightStateManager::getGuidance(const AircraftState& aircraft_state, NavigationManager& navigation_manager) 
 {
     std::optional<Waypoint> current_waypoint = navigation_manager.getCurrentWaypoint(aircraft_state);
-    if (shouldTransitionToInitialClimb(aircraft_state)) {
+    if (!activated) {
+        setGuidanceForTakeoffRoll(aircraft_state);
+        activated = true;
+    }
+    else if (shouldTransitionToInitialClimb(aircraft_state)) {
         setGuidanceForInitialClimb(aircraft_state);
         current_state = FlightState::INITIAL_CLIMB;
     }

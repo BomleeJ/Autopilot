@@ -47,7 +47,7 @@ void AircraftIO::updateAircraftState(AircraftState& aircraft_state)
 void AircraftIO::updateKinematics(AircraftState& aircraft_state)
 {
     aircraft_state.kinematics.vertical_speed_fpm = getDataRefValue<float>("speed", "vertical_speed_fpm");
-    aircraft_state.kinematics.indicated_airspeed_mps = getDataRefValue<float>("speed", "indicated_airspeed_mps");
+    aircraft_state.kinematics.indicated_airspeed_knots = getDataRefValue<float>("speed", "indicated_airspeed_knots");
     aircraft_state.kinematics.ground_speed_mps = getDataRefValue<float>("speed", "ground_speed_mps");
 }
 
@@ -69,10 +69,10 @@ void AircraftIO::updateConfiguration(AircraftState& aircraft_state)
 
 void AircraftIO::updateActuators(AircraftState& aircraft_state)
 {
-    aircraft_state.actuators.throttle_position = getDataRefValue<float>("actuators", "throttle_position");
-    aircraft_state.actuators.yoke_pitch_position = getDataRefValue<float>("actuators", "yoke_pitch_position");
-    aircraft_state.actuators.yoke_heading_position = getDataRefValue<float>("actuators", "yoke_heading_position");
-    aircraft_state.actuators.yoke_roll_position = getDataRefValue<float>("actuators", "yoke_roll_position");
+    aircraft_state.actuators.throttle_position = getDataRefValue<float>("cockpit_controls", "throttle_ratio");
+    aircraft_state.actuators.yoke_pitch_position = getDataRefValue<float>("cockpit_controls", "yoke_pitch_ratio");
+    aircraft_state.actuators.yoke_heading_position = getDataRefValue<float>("cockpit_controls", "yoke_heading_ratio");
+    aircraft_state.actuators.yoke_roll_position = getDataRefValue<float>("cockpit_controls", "yoke_roll_ratio");
 }
 
 void AircraftIO::updatePosition(AircraftState& aircraft_state)

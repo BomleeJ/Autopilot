@@ -6,6 +6,7 @@
 #include "XPLMDataAccess.h"
 #include <type_traits>
 #include <string>
+#include "AircraftState.h"
 #include <map>
 
 using json = nlohmann::json;
@@ -16,9 +17,19 @@ class AircraftIO {
 
     XPLMDataRef getDataRefPointer(const std::string& primary_key, const std::string& secondary_key);
     
+
+    void updateAircraftState(AircraftState& aircraft_state);
+    void updateKinematics(AircraftState& aircraft_state);
+    void updateAttitude(AircraftState& aircraft_state);
+    void updateConfiguration(AircraftState& aircraft_state);
+    void updateActuators(AircraftState& aircraft_state);
+    void updatePosition(AircraftState& aircraft_state);
+
     public:
 
     AircraftIO(const std::string& filename);
+
+    AircraftState getAircraftState();
 
     template <typename T>
     T getDataRefValue(const std::string& primary_key, const std::string& secondary_key) 
@@ -30,11 +41,11 @@ class AircraftIO {
         {
             return XPLMGetDataf(dataref);
         }
-        else if (std::is_same_v<T, double>)
+        else if constexpr (std::is_same_v<T, double>)
         {
             return XPLMGetDatad(dataref);
         }
-        else if (std::is_same_v<T, int>)
+        else if constexpr (std::is_same_v<T, int>)
         {
             return XPLMGetDatai(dataref);
         }

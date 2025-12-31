@@ -17,7 +17,8 @@
       "speed": {
         "true_airspeed_mps": "sim/flightmodel2/position/true_airspeed",
         "ground_speed_mps": "sim/flightmodel2/position/groundspeed",
-        "vertical_speed_fpm": "sim/flightmodel/position/vh_ind_fpm"
+        "vertical_speed_fpm": "sim/flightmodel/position/vh_ind_fpm",
+        "indicated_airspeed_knots": "sim/cockpit2/gauges/indicators/airspeed_kts_pilot"
       },
       "position": {
         "latitude_deg": "sim/flightmodel/position/latitude",
@@ -40,6 +41,7 @@
       },
       "gear": {
         "tire_steer_deg": "sim/flightmodel2/gear/tire_steer_command_deg",
-        "on_ground": "sim/flightmodel2/gear/on_ground"
+        "on_ground": "sim/flightmodel2/gear/on_ground",
+        "gear_deployed": "sim/cockpit2/controls/gear_handle_down"
       }
   }

@@ -18,6 +18,7 @@ class FlightStateManager {
     private:
     AircraftGuidance guidance;
     FlightState current_state;
+    bool activated;
 
     bool shouldTransitionToInitialClimb(const AircraftState& state) const;
     bool shouldTransitionToClimbToAltitude(const AircraftState& state) const;
@@ -34,6 +35,6 @@ class FlightStateManager {
 
 
     public:
-    FlightStateManager(const AircraftState& aircraft_state);
+    FlightStateManager();
     AircraftGuidance getGuidance(const AircraftState& aircraft_state, NavigationManager& navigation_manager);
 };

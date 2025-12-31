@@ -1,5 +1,0 @@
-if(EXISTS "/Users/omarjingoisemperor/Desktop/XplaneDev/build/AIO[1]_tests.cmake")
-  include("/Users/omarjingoisemperor/Desktop/XplaneDev/build/AIO[1]_tests.cmake")
-else()
-  add_test(AIO_NOT_BUILT AIO_NOT_BUILT)
-endif()

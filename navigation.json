@@ -1,0 +1,50 @@
+[
+    {
+      "ID": "KPHL",
+      "Name": "PHILADELPHIA INTL",
+      "LatDecimal": 39.87208333,
+      "LongDecimal": -75.24066111,
+      "AltitudeMSL": null,
+      "AltitudeAGL": null
+    },
+    {
+      "ID": "HULKK",
+      "Name": "HULKK",
+      "LatDecimal": 39.96908056,
+      "LongDecimal": -74.95443056,
+      "AltitudeMSL": null,
+      "AltitudeAGL": null
+    },
+    {
+      "ID": "RBV",
+      "Name": "ROBBINSVILLE",
+      "LatDecimal": 40.2024,
+      "LongDecimal": -74.495025,
+      "AltitudeMSL": null,
+      "AltitudeAGL": null
+    },
+    {
+      "ID": "LAURN",
+      "Name": "LAURN",
+      "LatDecimal": 40.55161111,
+      "LongDecimal": -74.12046389,
+      "AltitudeMSL": null,
+      "AltitudeAGL": null
+    },
+    {
+      "ID": "JFK",
+      "Name": "KENNEDY",
+      "LatDecimal": 40.63288333,
+      "LongDecimal": -73.77139167,
+      "AltitudeMSL": null,
+      "AltitudeAGL": null
+    },
+    {
+      "ID": "KBOS",
+      "Name": "GENERAL EDWARD LAWRENCE LOGAN",
+      "LatDecimal": 42.36294444,
+      "LongDecimal": -71.00638889,
+      "AltitudeMSL": null,
+      "AltitudeAGL": null
+    }
+  ]

@@ -5,7 +5,7 @@
 
 struct KinematicsTargets {
     std::optional<FeetPerMinute> vertical_speed_fpm;
-    std::optional<MetersPerSecond> indicated_airspeed_mps;
+    std::optional<Knots> indicated_airspeed_knots;
 };
 
 struct AttitudeTargets {

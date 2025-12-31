@@ -10,6 +10,7 @@
 #include "XPLMUtilities.h"
 #include "XPLMProcessing.h"
 #include "AircraftIO.h"
+#include "FlightState.h"
 #include <stdio.h>
 #include <string.h>
 #if IBM
@@ -36,14 +37,11 @@ XPLM_API XPLMFlightLoopID XPLMCreateFlightLoop(XPLMCreateFlightLoop_t * inParams
 
 XPLMFlightLoopID flightLoopID;
 AircraftIO val = AircraftIO("datarefs.json");
+FlightStateManager flightStateManager = FlightStateManager();
 
 float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void * inRefcon) {
-	
-	
-	XPLMDebugString("WE ARE INSIDE THE CALLBACK AGL: ");
-	float agl = val.getDataRefValue<float>("altitude", "agl_ft");
-	std::string flt = std::to_string(agl);
-	XPLMDebugString(flt.c_str());
+	AircraftState aircraft_state = val.getAircraftState();
+	aircraft_state.debugPrint();
 	return 1.0;
 }
 

@@ -42,6 +42,6 @@ class NavigationManager {
     public:
     NavigationManager(const std::string& filename);
     std::optional<Waypoint> getCurrentWaypoint(const AircraftState& aircraft_state);
-    static Degrees calculateHeadingToWaypoint(Latitude latitude, Longitude longitude, const Waypoint* destinationWaypoint = nullptr);
+    static Degrees calculateHeadingToWaypoint(Latitude latitude, Longitude longitude, const Waypoint* destinationWaypoint);
 
 };

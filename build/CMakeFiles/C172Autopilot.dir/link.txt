@@ -1,1 +1,0 @@
-/usr/bin/c++  -arch arm64 -bundle -Wl,-headerpad_max_install_names -o bin/libC172Autopilot.xpl CMakeFiles/C172Autopilot.dir/src/AircraftIO.cpp.o  -F/Users/omarjingoisemperor/Desktop/XplaneDev/SDK/Libraries/Mac -framework XPLM -framework XPWidgets -framework OpenGL -framework CoreFoundation
