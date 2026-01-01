@@ -131,6 +131,9 @@ void AircraftIO::setYokeHeadingPosition(float yoke_heading_position)
 
 void AircraftIO::setYokeRollPosition(float yoke_roll_position)
 {
+    XPLMDebugString("SETTING YOKE ROLL POSITION: ");
+    XPLMDebugString(std::to_string(yoke_roll_position).c_str());
+    XPLMDebugString("\n");
     setDataRefValue<float>("cockpit_controls", "yoke_roll_ratio", yoke_roll_position);
 }
 

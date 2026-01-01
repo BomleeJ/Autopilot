@@ -18,6 +18,8 @@ LDFLAGS = -arch x86_64 \
           -framework CoreFoundation
 
 TARGET = plugin.xpl
+datarefs = datarefs.json
+navigation = navigation.json
 SRC = test.cpp
 IMPLFiles = $(wildcard src/*.cpp)
 
@@ -28,6 +30,7 @@ $(TARGET): $(SRC)
 
 install: $(TARGET)
 	cp $(TARGET) "$(HOME)/Library/Application Support/Steam/steamapps/common/X-Plane 11/Resources/plugins"
-
+	cp $(datarefs) "$(HOME)/Library/Application Support/Steam/steamapps/common/X-Plane 11"
+	cp $(navigation) "$(HOME)/Library/Application Support/Steam/steamapps/common/X-Plane 11"
 clean:
 	rm -f *.o *.xpl

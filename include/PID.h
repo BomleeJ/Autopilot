@@ -1,5 +1,7 @@
 #pragma once
 #include "Types.h"
+#include "AircraftState.h"
+#include "AircraftGuidance.h"
 class PIDController {
     protected:
     float ProportionalConstant;
@@ -10,26 +12,29 @@ class PIDController {
     Error previous_error;
     public:
     PIDController(float kp, float ki, float kd);
-    virtual float calculate(float error) = 0;
     
 };
 
 class ThrottlePIDController : public PIDController {
     public:
     ThrottlePIDController(float kp, float ki, float kd);
-    float calculate(float error) override;
+    float calculate(float error);
     Error calculateError(Knots target_airspeed_knots, Knots current_airspeed_knots);
 };
 
 class PitchPIDController : public PIDController {
     public:
-    float calculate(float error) override;
+    float calculate(float error);
 };
 
 class HeadingPIDController : public PIDController {
-    public:
-    HeadingPIDController(float kp, float ki, float kd);
+    private:
+    Degrees calculateHeadingError(Degrees current_heading, Degrees target_heading);
     Degrees calculatePhiTarget(Degrees current_hpath, Degrees target_hpath);
     float calculatePhiError(Degrees phi_target, Degrees phi_current);
-    float calculate(float error) override;
+    public:
+    HeadingPIDController(float kp, float ki, float kd);
+    
+    float getYokeCommand(AircraftState& aircraft_state, AircraftGuidance& guidance);
+    
 };

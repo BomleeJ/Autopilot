@@ -2,6 +2,9 @@
 #include "XPLMUtilities.h"
 #include <algorithm>
 #include <string>
+#include <cstdio>
+#include <cstring>
+
 
 PIDController::PIDController(float kp, float ki, float kd): 
     ProportionalConstant(kp), 
@@ -20,6 +23,10 @@ ThrottlePIDController::ThrottlePIDController(float kp, float ki, float kd):
 PIDController(kp, ki, kd) 
 {   }
 
+HeadingPIDController::HeadingPIDController(float kp, float ki, float kd): 
+PIDController(kp, ki, kd) 
+{   }
+
 float ThrottlePIDController::calculate(float error) {
     float output = 0.6f;
 
@@ -35,39 +42,7 @@ float ThrottlePIDController::calculate(float error) {
 
     RunningIntegral += error;
     RunningIntegral = std::clamp(RunningIntegral, -2.0f, 2.0f);
-    XPLMDebugString("Running Integral: ");
-    XPLMDebugString(std::to_string(RunningIntegral).c_str());
-    XPLMDebugString("\n");
-
-    XPLMDebugString("Derivative: ");
-    XPLMDebugString(std::to_string(Derivative).c_str());
-    XPLMDebugString("\n");
     output += DerivativeConstant * Derivative;
-
-    // INSERT_YOUR_CODE
-    float pct_p = ProportionalConstant * error;
-    float pct_i = IntegralConstant * RunningIntegral;
-    float pct_d = DerivativeConstant * Derivative;
-
-
-    float total = pct_p + pct_i + pct_d + 0.4f; // match total output before clamping
-
-    char debugStr[128];
-    char pStr[32], iStr[32], dStr[32], totalStr[32];
-
-    snprintf(pStr, sizeof(pStr), "P=%.2f%% ", pct_p * 100.0f);
-    snprintf(iStr, sizeof(iStr), "I=%.2f%% ", pct_i * 100.0f);
-    snprintf(dStr, sizeof(dStr), "D=%.2f%% ", pct_d * 100.0f);
-    snprintf(totalStr, sizeof(totalStr), "Total=%.2f%%\n", total * 100.0f);
-
-    strcpy(debugStr, "Throttle PID breakdown: ");
-    strcat(debugStr, pStr);
-    strcat(debugStr, iStr);
-    strcat(debugStr, dStr);
-    strcat(debugStr, totalStr);
-
-    XPLMDebugString(debugStr);
-    XPLMDebugString("\n");
 
     return std::clamp(output, 0.0f, 1.0f);
 }
@@ -81,6 +56,56 @@ float PitchPIDController::calculate(float error) {
     return 0.0f;
 }
 
-float HeadingPIDController::calculate(float error) {
-    return 0.0f;
+Degrees HeadingPIDController::calculateHeadingError(Degrees current_heading, Degrees target_heading) {
+    float error = target_heading - current_heading;
+    
+    // Normalize to [-180, 180]
+    while (error > 180.0f) error -= 360.0f;
+    while (error < -180.0f) error += 360.0f;
+    
+    char debugStr[128];
+    snprintf(debugStr, sizeof(debugStr), "Heading Error: Current=%.2f deg, Target=%.2f deg, Error=%.2f deg\n", 
+             current_heading, target_heading, error);
+    XPLMDebugString(debugStr);
+    XPLMDebugString("\n");
+    
+    return error;
 }
+
+float HeadingPIDController::calculatePhiTarget(Degrees current_hpath, Degrees target_hpath) {
+    float error = calculateHeadingError(current_hpath, target_hpath);
+    float maxBankAngle = 25.0f;
+    float phi_target = std::clamp(error, -maxBankAngle, maxBankAngle);
+
+    char debugStr[128];
+    snprintf(debugStr, sizeof(debugStr), "Phi Target: Error=%.2f deg, Phi Target=%.2f deg\n", 
+             error, phi_target);
+    XPLMDebugString(debugStr);
+    XPLMDebugString("\n");
+
+    return phi_target;
+
+}
+
+float HeadingPIDController::calculatePhiError(Degrees phi_target, Degrees phi_current) {
+    float error = (phi_target - phi_current);
+    
+    char debugStr[128];
+    snprintf(debugStr, sizeof(debugStr), "Phi Error: Phi Target=%.2f deg, Phi Current=%.2f deg, Error=%.4f\n", 
+             phi_target, phi_current, error);
+    XPLMDebugString(debugStr);
+    XPLMDebugString("\n");
+    
+    return error;
+}
+
+float HeadingPIDController::getYokeCommand(AircraftState& aircraft_state, AircraftGuidance& guidance) {
+    Degrees current_hpath = aircraft_state.attitude.flight_path_heading_deg;
+    Degrees target_hpath = guidance.attitude_targets.flight_path_heading_deg.value();
+    Degrees phi_target = calculatePhiTarget(current_hpath, target_hpath);
+    Degrees phi_current = aircraft_state.attitude.roll_deg;
+    float phi_error = calculatePhiError(phi_target, phi_current);
+    phi_error = phi_error * ProportionalConstant;
+    return std::clamp(phi_error, -0.5f, 0.5f);
+}
+

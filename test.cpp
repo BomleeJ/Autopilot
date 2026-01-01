@@ -41,6 +41,7 @@ AircraftIO val = AircraftIO("datarefs.json");
 FlightStateManager flightStateManager = FlightStateManager();
 NavigationManager navigationManager = NavigationManager("navigation.json");
 ThrottlePIDController throttlePIDController = ThrottlePIDController(0.8f, 0.1f, 100.0f);
+HeadingPIDController headingPIDController = HeadingPIDController(0.02f, 0.0f, 0.0f);
 float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void * inRefcon) {
 	AircraftState aircraft_state = val.getAircraftState();
 
@@ -53,14 +54,16 @@ float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFli
 	}
 	AircraftGuidance guidance_value = guidance.value();
 	float SpeedError = throttlePIDController.calculateError(guidance_value.kinematics_targets.indicated_airspeed_knots, aircraft_state.kinematics.indicated_airspeed_knots);
-	XPLMDebugString("Speed Error: ");
-	XPLMDebugString(std::to_string(SpeedError).c_str());
-	XPLMDebugString("\n");
+	
 	float throttle_output = throttlePIDController.calculate(SpeedError);
 	val.setThrottlePosition(throttle_output);
-	XPLMDebugString("Throttle output:");
-	XPLMDebugString(std::to_string(throttle_output).c_str());
+	float yoke_heading_output = headingPIDController.getYokeCommand(aircraft_state, guidance_value);
+	XPLMDebugString("Yoke Roll Output BEFORE setYokeRollPosition: ");
+	XPLMDebugString(std::to_string(yoke_heading_output).c_str());
 	XPLMDebugString("\n");
+	val.setYokeRollPosition(yoke_heading_output);
+
+	
 	return -1.0f;
 	
 }
