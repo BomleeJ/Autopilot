@@ -1,7 +1,9 @@
 #include <algorithm>
 #include "ErrorCalculator.h"
+
+/*
 Error ErrorCalculator::calculateSpeedError(const AircraftState& aircraft_state, const AircraftGuidance& guidance) {
-    Error err = (guidance.kinematics_targets.indicated_airspeed_knots.value() 
+    Error err = (guidance.kinematics_targets.indicated_airspeed_knots
         - aircraft_state.kinematics.indicated_airspeed_knots 
         ) / guidance.kinematics_targets.indicated_airspeed_knots.value();
 
@@ -31,3 +33,4 @@ Error ErrorCalculator::calculateHeadingError(const AircraftState& aircraft_state
 
     return std::clamp(err, -1.0f, 1.0f);
 }
+    */

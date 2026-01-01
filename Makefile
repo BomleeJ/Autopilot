@@ -25,5 +25,9 @@ all: $(TARGET)
 	
 $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) $(IMPLFiles)  -bundle $(LDFLAGS) -o $(TARGET)
+
+install: $(TARGET)
+	cp $(TARGET) "$(HOME)/Library/Application Support/Steam/steamapps/common/X-Plane 11/Resources/plugins"
+
 clean:
 	rm -f *.o *.xpl

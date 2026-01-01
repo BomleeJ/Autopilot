@@ -17,14 +17,14 @@ Depends on that it will either return a waypoint or a null pointer
 struct Waypoint {
     Latitude latitude;
     Longitude longitude;
-    std::optional<Feet> altitude_msl_ft;
-    std::optional<Feet> altitude_agl_ft;
+    Feet altitude_msl_ft;
+    Feet altitude_agl_ft;
 
     Waypoint(
         Latitude in_latitude, 
         Longitude in_longitude, 
-        std::optional<Feet> in_altitude_msl_ft = std::nullopt, 
-        std::optional<Feet> in_altitude_agl_ft = std::nullopt
+        Feet in_altitude_msl_ft, 
+        Feet in_altitude_agl_ft
     );
 };
 

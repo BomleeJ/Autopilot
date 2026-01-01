@@ -11,6 +11,7 @@
 #include "XPLMProcessing.h"
 #include "AircraftIO.h"
 #include "FlightState.h"
+#include "PID.h"
 #include <stdio.h>
 #include <string.h>
 #if IBM
@@ -38,11 +39,27 @@ XPLM_API XPLMFlightLoopID XPLMCreateFlightLoop(XPLMCreateFlightLoop_t * inParams
 XPLMFlightLoopID flightLoopID;
 AircraftIO val = AircraftIO("datarefs.json");
 FlightStateManager flightStateManager = FlightStateManager();
-
+NavigationManager navigationManager = NavigationManager("navigation.json");
+ThrottlePIDController throttlePIDController = ThrottlePIDController(0.8f, 0.4f, 0.1f);
 float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void * inRefcon) {
 	AircraftState aircraft_state = val.getAircraftState();
-	aircraft_state.debugPrint();
-	return 1.0;
+
+	if (aircraft_state.position.altitude_agl_ft < 100.0f) {
+		return -1;
+	}
+	std::optional<AircraftGuidance> guidance = flightStateManager.getGuidance(aircraft_state, navigationManager);
+	if (!guidance.has_value()) {
+		return 1.0f;
+	}
+	AircraftGuidance guidance_value = guidance.value();
+	float SpeedError = throttlePIDController.calculateError(guidance_value.kinematics_targets.indicated_airspeed_knots, aircraft_state.kinematics.indicated_airspeed_knots);
+	float throttle_output = throttlePIDController.calculate(SpeedError);
+	val.setThrottlePosition(throttle_output);
+	XPLMDebugString("Throttle output:");
+	XPLMDebugString(std::to_string(throttle_output).c_str());
+	XPLMDebugString("\n");
+	return -1.0f;
+	
 }
 
 void createFlightLoop() {

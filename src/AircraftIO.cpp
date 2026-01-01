@@ -80,7 +80,7 @@ void AircraftIO::updatePosition(AircraftState& aircraft_state)
     aircraft_state.position.latitude = getDataRefValue<float>("position", "latitude_deg");
     aircraft_state.position.longitude = getDataRefValue<float>("position", "longitude_deg");
     aircraft_state.position.altitude_msl_ft = getDataRefValue<float>("altitude", "msl_ft");
-    aircraft_state.position.altitude_agl_ft = getDataRefValue<float>("altitude", "agl_ft");
+    aircraft_state.position.altitude_agl_ft = getDataRefValue<float>("altitude", "agl_ft") * 3.28084f;
 }
 
 XPLMDataRef AircraftIO::getDataRefPointer(const std::string& primary_key, const std::string& secondary_key) 
@@ -112,5 +112,25 @@ XPLMDataRef AircraftIO::getDataRefPointer(const std::string& primary_key, const 
     }
     return opaqueDataRef;
     
+}
+
+void AircraftIO::setThrottlePosition(float throttle_position)
+{
+    setDataRefValue<float>("cockpit_controls", "throttle_ratio", throttle_position);
+}
+
+void AircraftIO::setYokePitchPosition(float yoke_pitch_position)
+{
+    setDataRefValue<float>("cockpit_controls", "yoke_pitch_ratio", yoke_pitch_position);
+}
+
+void AircraftIO::setYokeHeadingPosition(float yoke_heading_position)
+{
+    setDataRefValue<float>("cockpit_controls", "yoke_heading_ratio", yoke_heading_position);
+}
+
+void AircraftIO::setYokeRollPosition(float yoke_roll_position)
+{
+    setDataRefValue<float>("cockpit_controls", "yoke_roll_ratio", yoke_roll_position);
 }
 

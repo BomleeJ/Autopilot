@@ -31,6 +31,11 @@ class AircraftIO {
 
     AircraftState getAircraftState();
 
+    void setThrottlePosition(float throttle_position);
+    void setYokePitchPosition(float yoke_pitch_position);
+    void setYokeHeadingPosition(float yoke_heading_position);
+    void setYokeRollPosition(float yoke_roll_position);
+
     template <typename T>
     T getDataRefValue(const std::string& primary_key, const std::string& secondary_key) 
     {

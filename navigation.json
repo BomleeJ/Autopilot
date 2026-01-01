@@ -1,13 +1,5 @@
 [
     {
-      "ID": "KPHL",
-      "Name": "PHILADELPHIA INTL",
-      "LatDecimal": 39.87208333,
-      "LongDecimal": -75.24066111,
-      "AltitudeMSL": null,
-      "AltitudeAGL": null
-    },
-    {
       "ID": "HULKK",
       "Name": "HULKK",
       "LatDecimal": 39.96908056,

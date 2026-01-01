@@ -14,8 +14,8 @@ using json = nlohmann::json;
 Waypoint::Waypoint(
     Latitude in_latitude, 
     Longitude in_longitude, 
-    std::optional<Feet> in_altitude_msl_ft, 
-    std::optional<Feet> in_altitude_agl_ft
+    Feet in_altitude_msl_ft, 
+    Feet in_altitude_agl_ft
 ) : 
 latitude(in_latitude), 
 longitude(in_longitude), 
@@ -30,10 +30,10 @@ altitude_agl_ft(in_altitude_agl_ft)
     if (in_longitude < -180.0 || in_longitude > 180.0) {
         throw std::invalid_argument("Longitude must be between -180 and 180 degrees");
     }
-    if (altitude_msl_ft.has_value() && altitude_msl_ft.value() < -3000.0f) {
+    if (altitude_msl_ft < -3000.0f) {
         throw std::invalid_argument("Altitude MSL must be greater than -3000 feet");
     }
-    if (altitude_agl_ft.has_value() && altitude_agl_ft.value() < 0.0f) {
+    if (altitude_agl_ft < 0.0f) {
         throw std::invalid_argument("Altitude AGL must be greater than 0 feet");
     }
     } 
@@ -51,11 +51,19 @@ activated(false)
 {
     json waypoints_json = JsonLoader::loadJsonFile(filename);
     for (const auto& waypoint : waypoints_json) {
-        if (waypoint.contains("LatDecimal") && waypoint.contains("LongDecimal")) 
+        if (waypoint.contains("LatDecimal") && waypoint.contains("LongDecimal") && waypoint.contains("AltitudeMSL") && waypoint.contains("AltitudeAGL")) 
         {
-            waypoints.push_back(Waypoint(waypoint["LatDecimal"], waypoint["LongDecimal"]));
+            
+            Feet altitude_msl_ft = waypoint["AltitudeMSL"].is_null() ? 8500.0f : waypoint["AltitudeMSL"].get<Feet>();
+            Feet altitude_agl_ft = waypoint["AltitudeAGL"].is_null() ? 2000.0f : waypoint["AltitudeAGL"].get<Feet>();
+            XPLMDebugString("WAYPOINT: Altitude MSL: ");
+            XPLMDebugString(std::to_string(altitude_msl_ft).c_str());
+            XPLMDebugString("\nWAYPOINT: Altitude AGL: ");
+            XPLMDebugString(std::to_string(altitude_agl_ft).c_str());
+            XPLMDebugString("\n");
+            waypoints.push_back(Waypoint(waypoint["LatDecimal"], waypoint["LongDecimal"], altitude_msl_ft, altitude_agl_ft));
         }
-        else 
+        else
         {
             XPLMDebugString("ERROR: Waypoint constructor: navigation.json does not contain LatDecimal or LongDecimal\n");
             XPLMDebugString("\n");
