@@ -21,7 +21,7 @@ PIDController(kp, ki, kd)
 {   }
 
 float ThrottlePIDController::calculate(float error) {
-    float output = 0.4f;
+    float output = 0.6f;
 
     output += ProportionalConstant * error;
     
@@ -34,7 +34,7 @@ float ThrottlePIDController::calculate(float error) {
     output += IntegralConstant * RunningIntegral;
 
     RunningIntegral += error;
-    RunningIntegral = std::clamp(RunningIntegral, -50.0f, 50.0f);
+    RunningIntegral = std::clamp(RunningIntegral, -2.0f, 2.0f);
     XPLMDebugString("Running Integral: ");
     XPLMDebugString(std::to_string(RunningIntegral).c_str());
     XPLMDebugString("\n");

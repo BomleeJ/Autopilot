@@ -28,5 +28,8 @@ class PitchPIDController : public PIDController {
 
 class HeadingPIDController : public PIDController {
     public:
+    HeadingPIDController(float kp, float ki, float kd);
+    Degrees calculatePhiTarget(Degrees current_hpath, Degrees target_hpath);
+    float calculatePhiError(Degrees phi_target, Degrees phi_current);
     float calculate(float error) override;
 };

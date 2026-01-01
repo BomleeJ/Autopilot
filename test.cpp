@@ -40,7 +40,7 @@ XPLMFlightLoopID flightLoopID;
 AircraftIO val = AircraftIO("datarefs.json");
 FlightStateManager flightStateManager = FlightStateManager();
 NavigationManager navigationManager = NavigationManager("navigation.json");
-ThrottlePIDController throttlePIDController = ThrottlePIDController(0.8f, 0.4f, 0.1f);
+ThrottlePIDController throttlePIDController = ThrottlePIDController(0.8f, 0.1f, 100.0f);
 float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void * inRefcon) {
 	AircraftState aircraft_state = val.getAircraftState();
 
@@ -53,6 +53,9 @@ float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFli
 	}
 	AircraftGuidance guidance_value = guidance.value();
 	float SpeedError = throttlePIDController.calculateError(guidance_value.kinematics_targets.indicated_airspeed_knots, aircraft_state.kinematics.indicated_airspeed_knots);
+	XPLMDebugString("Speed Error: ");
+	XPLMDebugString(std::to_string(SpeedError).c_str());
+	XPLMDebugString("\n");
 	float throttle_output = throttlePIDController.calculate(SpeedError);
 	val.setThrottlePosition(throttle_output);
 	XPLMDebugString("Throttle output:");
