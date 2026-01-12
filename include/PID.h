@@ -10,8 +10,10 @@ class PIDController {
     float RunningIntegral;
     float Derivative;
     Error previous_error;
+    
     public:
     PIDController(float kp, float ki, float kd);
+    float calculate(float error);  // Basic PID calculation, returns normalized output [-1, 1]
     
 };
 
@@ -23,8 +25,20 @@ class ThrottlePIDController : public PIDController {
 };
 
 class PitchPIDController : public PIDController {
+    private:
+    PIDController altitudePID;
+    PIDController vspeedPID;
+    FeetPerMinute max_vspeed;
+    
+    Error calculateAltitudeError(Feet target_altitude, Feet current_altitude);
+    Error calculateVspeedError(FeetPerMinute target_vspeed, FeetPerMinute current_vspeed);
+    FeetPerMinute calculateVspeedTarget(Error altitude_error);
+    
     public:
+    PitchPIDController(float kp_altitude, float ki_altitude, float kd_altitude, 
+                       float kp_vspeed, float ki_vspeed, float kd_vspeed);
     float calculate(float error);
+    float getPitchCommand(AircraftState& aircraft_state, AircraftGuidance& guidance);
 };
 
 class HeadingPIDController : public PIDController {

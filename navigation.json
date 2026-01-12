@@ -4,7 +4,7 @@
       "Name": "HULKK",
       "LatDecimal": 39.96908056,
       "LongDecimal": -74.95443056,
-      "AltitudeMSL": null,
+      "AltitudeMSL": 8500,
       "AltitudeAGL": null
     },
     {
@@ -12,7 +12,7 @@
       "Name": "ROBBINSVILLE",
       "LatDecimal": 40.2024,
       "LongDecimal": -74.495025,
-      "AltitudeMSL": null,
+      "AltitudeMSL": 8500,
       "AltitudeAGL": null
     },
     {
@@ -20,7 +20,7 @@
       "Name": "LAURN",
       "LatDecimal": 40.55161111,
       "LongDecimal": -74.12046389,
-      "AltitudeMSL": null,
+      "AltitudeMSL": 8500,
       "AltitudeAGL": null
     },
     {
@@ -28,7 +28,7 @@
       "Name": "KENNEDY",
       "LatDecimal": 40.63288333,
       "LongDecimal": -73.77139167,
-      "AltitudeMSL": null,
+      "AltitudeMSL": 8500,
       "AltitudeAGL": null
     },
     {
@@ -36,7 +36,7 @@
       "Name": "GENERAL EDWARD LAWRENCE LOGAN",
       "LatDecimal": 42.36294444,
       "LongDecimal": -71.00638889,
-      "AltitudeMSL": null,
+      "AltitudeMSL": 8500,
       "AltitudeAGL": null
     }
   ]
