@@ -19,12 +19,16 @@ struct Waypoint {
     Longitude longitude;
     Feet altitude_msl_ft;
     Feet altitude_agl_ft;
+    std::string id;  // Waypoint ID from navigation.json
+    std::string name;  // Waypoint name from navigation.json
 
     Waypoint(
         Latitude in_latitude, 
         Longitude in_longitude, 
         Feet in_altitude_msl_ft, 
-        Feet in_altitude_agl_ft
+        Feet in_altitude_agl_ft,
+        const std::string& in_id = "",
+        const std::string& in_name = ""
     );
 };
 
@@ -42,6 +46,11 @@ class NavigationManager {
     public:
     NavigationManager(const std::string& filename);
     std::optional<Waypoint> getCurrentWaypoint(const AircraftState& aircraft_state);
+    std::optional<Waypoint> getNextWaypoint(const AircraftState& aircraft_state);
+    std::optional<Waypoint> getDestinationWaypoint() const;
+    Kilometers calculateDistanceToDestination(Latitude lat, Longitude lon) const;
+    Kilometers calculateDistanceToCurrentWaypoint(Latitude lat, Longitude lon) const;
+    size_t getCurrentWaypointIndex() const;
     static Degrees calculateHeadingToWaypoint(Latitude latitude, Longitude longitude, const Waypoint* destinationWaypoint);
 
 };

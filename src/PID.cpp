@@ -32,10 +32,10 @@ float PIDController::calculate(float error) {
     previous_error = error;
     output += DerivativeConstant * Derivative;
     
-    // Integral term
+    // Integral term with windup prevention/saturation
     output += IntegralConstant * RunningIntegral;
     RunningIntegral += error;
-    RunningIntegral = std::clamp(RunningIntegral, -2.0f, 2.0f);
+    RunningIntegral = std::clamp(RunningIntegral, -2.0f, 2.0f);  // Prevent integral windup
     
     // Return normalized output [-1, 1]
     return std::clamp(output, -1.0f, 1.0f);
@@ -89,9 +89,8 @@ float PitchPIDController::calculate(float error) {
 Error PitchPIDController::calculateAltitudeError(Feet target_altitude, Feet current_altitude) {
     float raw_error = target_altitude - current_altitude;
     // Normalize by dividing by max altitude error (1000 ft) or target altitude, whichever is larger
-    float denom = std::max(std::abs(target_altitude), 1000.0f);
-    if (denom < 100.0f) denom = 1000.0f; // Minimum denominator to prevent division by very small numbers
-    Error normalized_error = raw_error / denom;
+    // REPLACES TO JUST BE divided 1000
+    Error normalized_error = raw_error / 1000;
     
     char debugStr[256];
     snprintf(debugStr, sizeof(debugStr), "Altitude Error: Current=%.2f ft, Target=%.2f ft, Raw Error=%.2f ft, Normalized=%.4f\n", 
@@ -116,6 +115,7 @@ Error PitchPIDController::calculateVspeedError(FeetPerMinute target_vspeed, Feet
 
 FeetPerMinute PitchPIDController::calculateVspeedTarget(Error altitude_error) {
     // Use altitude PID to get normalized output
+    // Note: altitudePID.calculate() includes integral windup prevention (clamped to [-2.0, 2.0])
     float normalized_output = altitudePID.calculate(altitude_error);
     
     // Convert normalized output [-1, 1] to vspeed target
@@ -124,14 +124,14 @@ FeetPerMinute PitchPIDController::calculateVspeedTarget(Error altitude_error) {
     FeetPerMinute vspeed_target;
     if (normalized_output >= 0.0f) {
         // Climb: scale to [0, 1000] fpm
-        vspeed_target = normalized_output * 1000.0f;
+        vspeed_target = normalized_output * 800.0f;
     } else {
         // Descent: scale to [-800, 0] fpm
         vspeed_target = normalized_output * 800.0f;
     }
     
     // Clamp to reasonable limits: -800 fpm (descent) to 1000 fpm (climb)
-    vspeed_target = std::clamp(vspeed_target, -800.0f, 1000.0f);
+    vspeed_target = std::clamp(vspeed_target, -800.0f, 800.0f);
     
     char debugStr[256];
     snprintf(debugStr, sizeof(debugStr), "Vspeed Target: Altitude Error=%.4f, Normalized Output=%.4f, Vspeed Target=%.2f fpm\n", 
@@ -166,6 +166,7 @@ float PitchPIDController::getPitchCommand(AircraftState& aircraft_state, Aircraf
     }
     
     // Calculate vspeed error and use vspeed PID to get pitch command
+    // Note: vspeedPID.calculate() includes integral windup prevention (clamped to [-2.0, 2.0])
     Error vspeed_error = calculateVspeedError(target_vspeed, current_vspeed);
     float normalized_pitch_output = vspeedPID.calculate(vspeed_error);
     

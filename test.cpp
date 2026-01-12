@@ -12,6 +12,7 @@
 #include "AircraftIO.h"
 #include "FlightState.h"
 #include "PID.h"
+#include "NavigationWindow.h"
 #include <stdio.h>
 #include <string.h>
 #if IBM
@@ -40,11 +41,15 @@ XPLMFlightLoopID flightLoopID;
 AircraftIO val = AircraftIO("datarefs.json");
 FlightStateManager flightStateManager = FlightStateManager();
 NavigationManager navigationManager = NavigationManager("navigation.json");
-ThrottlePIDController throttlePIDController = ThrottlePIDController(0.8f, 0.1f, 100.0f);
+ThrottlePIDController throttlePIDController = ThrottlePIDController(1.0f, 0.15f, 100.0f);
 HeadingPIDController headingPIDController = HeadingPIDController(0.02f, 0.0f, 0.0f);
-PitchPIDController pitchPIDController = PitchPIDController(1.2f, 0.02f, 0.0f, 0.6f, 0.05f, 0.0f);
+PitchPIDController pitchPIDController = PitchPIDController(1.2f, 0.01f, 0.0f, 0.3f, 0.005f, 0.0f);
+NavigationWindow navigationWindow(navigationManager);
 float myFlightLoop(float inElapsedSinceLastCall, float inElapsedTimeSinceLastFlightLoop, int inCounter, void * inRefcon) {
 	AircraftState aircraft_state = val.getAircraftState();
+
+	// Update navigation window with current aircraft state
+	navigationWindow.setAircraftState(aircraft_state);
 
 	if (aircraft_state.position.altitude_agl_ft < 100.0f) {
 		return -1;

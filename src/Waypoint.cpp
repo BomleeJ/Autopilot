@@ -15,12 +15,16 @@ Waypoint::Waypoint(
     Latitude in_latitude, 
     Longitude in_longitude, 
     Feet in_altitude_msl_ft, 
-    Feet in_altitude_agl_ft
+    Feet in_altitude_agl_ft,
+    const std::string& in_id,
+    const std::string& in_name
 ) : 
 latitude(in_latitude), 
 longitude(in_longitude), 
 altitude_msl_ft(in_altitude_msl_ft),
-altitude_agl_ft(in_altitude_agl_ft)
+altitude_agl_ft(in_altitude_agl_ft),
+id(in_id),
+name(in_name)
 {
     try 
     {
@@ -56,12 +60,16 @@ activated(false)
             
             Feet altitude_msl_ft = waypoint["AltitudeMSL"].is_null() ? 8500.0f : waypoint["AltitudeMSL"].get<Feet>();
             Feet altitude_agl_ft = waypoint["AltitudeAGL"].is_null() ? 2000.0f : waypoint["AltitudeAGL"].get<Feet>();
+            
+            std::string waypoint_id = waypoint.contains("ID") ? waypoint["ID"].get<std::string>() : "";
+            std::string waypoint_name = waypoint.contains("Name") ? waypoint["Name"].get<std::string>() : "";
+            
             XPLMDebugString("WAYPOINT: Altitude MSL: ");
             XPLMDebugString(std::to_string(altitude_msl_ft).c_str());
             XPLMDebugString("\nWAYPOINT: Altitude AGL: ");
             XPLMDebugString(std::to_string(altitude_agl_ft).c_str());
             XPLMDebugString("\n");
-            waypoints.push_back(Waypoint(waypoint["LatDecimal"], waypoint["LongDecimal"], altitude_msl_ft, altitude_agl_ft));
+            waypoints.push_back(Waypoint(waypoint["LatDecimal"], waypoint["LongDecimal"], altitude_msl_ft, altitude_agl_ft, waypoint_id, waypoint_name));
         }
         else
         {
@@ -70,6 +78,25 @@ activated(false)
             exit(1);
         }
         
+    }
+
+    // Debug: Print all loaded waypoints
+    XPLMDebugString("Loaded waypoints:\n");
+    for (const auto& wp : waypoints) {
+        XPLMDebugString("  Waypoint: ");
+        XPLMDebugString("ID: ");
+        XPLMDebugString(wp.id.c_str());
+        XPLMDebugString(", Name: ");
+        XPLMDebugString(wp.name.c_str());
+        XPLMDebugString(", Lat: ");
+        XPLMDebugString(std::to_string(wp.latitude).c_str());
+        XPLMDebugString(", Lon: ");
+        XPLMDebugString(std::to_string(wp.longitude).c_str());
+        XPLMDebugString(", AltMSL: ");
+        XPLMDebugString(std::to_string(wp.altitude_msl_ft).c_str());
+        XPLMDebugString(", AltAGL: ");
+        XPLMDebugString(std::to_string(wp.altitude_agl_ft).c_str());
+        XPLMDebugString("\n");
     }
 
     if (waypoints.empty()) {
@@ -82,7 +109,7 @@ activated(false)
 size_t NavigationManager::getClosestWaypointIdx(Latitude latitude, Longitude longitude)
 {
     auto it = std::min_element(waypoints.begin(), waypoints.end(), [this, latitude, longitude](const Waypoint& A, const Waypoint& B){
-        return calculateDistanceToWaypoint(latitude, longitude, &A) < calculateDistanceToWaypoint(latitude, longitude, &B);
+        return calculateDistanceToWaypoint(latitude, longitude, &A) > calculateDistanceToWaypoint(latitude, longitude, &B);
     });
     return std::distance(waypoints.begin(), it);
 }
@@ -171,4 +198,49 @@ Kilometers NavigationManager::calculateDistanceToWaypoint(Latitude aircraftLatit
     float angularDistance = 2.0f * std::atan2(std::sqrt(haversineA), std::sqrt(1.0f - haversineA));
     float distanceKilometers = EARTH_RADIUS_KM * angularDistance;
     return distanceKilometers;
+}
+
+std::optional<Waypoint> NavigationManager::getNextWaypoint(const AircraftState& aircraft_state)
+{
+    std::optional<Waypoint> current = getCurrentWaypoint(aircraft_state);
+    if (!current.has_value()) {
+        return std::nullopt;
+    }
+    
+    // Check if there's a next waypoint
+    if (currWaypointIdx + 1 < waypoints.size()) {
+        return waypoints[currWaypointIdx + 1];
+    }
+    
+    return std::nullopt;
+}
+
+std::optional<Waypoint> NavigationManager::getDestinationWaypoint() const
+{
+    if (waypoints.empty()) {
+        return std::nullopt;
+    }
+    return waypoints.back();
+}
+
+Kilometers NavigationManager::calculateDistanceToDestination(Latitude lat, Longitude lon) const
+{
+    std::optional<Waypoint> dest = getDestinationWaypoint();
+    if (!dest.has_value()) {
+        return 0.0f;
+    }
+    return calculateDistanceToWaypoint(lat, lon, &dest.value());
+}
+
+Kilometers NavigationManager::calculateDistanceToCurrentWaypoint(Latitude lat, Longitude lon) const
+{
+    if (waypoints.empty() || currWaypointIdx >= waypoints.size()) {
+        return 0.0f;
+    }
+    return calculateDistanceToWaypoint(lat, lon, &waypoints[currWaypointIdx]);
+}
+
+size_t NavigationManager::getCurrentWaypointIndex() const
+{
+    return currWaypointIdx;
 }

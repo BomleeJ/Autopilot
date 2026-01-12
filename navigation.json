@@ -1,42 +1,50 @@
 [
-    {
-      "ID": "HULKK",
-      "Name": "HULKK",
-      "LatDecimal": 39.96908056,
-      "LongDecimal": -74.95443056,
-      "AltitudeMSL": 8500,
-      "AltitudeAGL": null
-    },
-    {
-      "ID": "RBV",
-      "Name": "ROBBINSVILLE",
-      "LatDecimal": 40.2024,
-      "LongDecimal": -74.495025,
-      "AltitudeMSL": 8500,
-      "AltitudeAGL": null
-    },
-    {
-      "ID": "LAURN",
-      "Name": "LAURN",
-      "LatDecimal": 40.55161111,
-      "LongDecimal": -74.12046389,
-      "AltitudeMSL": 8500,
-      "AltitudeAGL": null
-    },
-    {
-      "ID": "JFK",
-      "Name": "KENNEDY",
-      "LatDecimal": 40.63288333,
-      "LongDecimal": -73.77139167,
-      "AltitudeMSL": 8500,
-      "AltitudeAGL": null
-    },
-    {
-      "ID": "KBOS",
-      "Name": "GENERAL EDWARD LAWRENCE LOGAN",
-      "LatDecimal": 42.36294444,
-      "LongDecimal": -71.00638889,
-      "AltitudeMSL": 8500,
-      "AltitudeAGL": null
-    }
-  ]
+  {
+    "ID": "GOSAM",
+    "Name": "GOSAM",
+    "LatDecimal": 55.78860833,
+    "LongDecimal": -4.20055556,
+    "AltitudeMSL": 6500,
+    "AltitudeAGL": null
+  },
+  {
+    "ID": "FENIK",
+    "Name": "FENIK",
+    "LatDecimal": 55.71527778,
+    "LongDecimal": -4.29194444,
+    "AltitudeMSL": 6500,
+    "AltitudeAGL": null
+  },
+  {
+    "ID": "PEPOD",
+    "Name": "PEPOD",
+    "LatDecimal": 54.27110833,
+    "LongDecimal": -5.56916667,
+    "AltitudeMSL": 6500,
+    "AltitudeAGL": null
+  },
+  {
+    "ID": "NIMAT",
+    "Name": "NIMAT",
+    "LatDecimal": 53.96500000,
+    "LongDecimal": -5.74221944,
+    "AltitudeMSL": 6500,
+    "AltitudeAGL": null
+  },
+  {
+    "ID": "EIDW",
+    "Name": "DUBLIN INTERNATIONAL FINAL",
+    "LatDecimal": 53.330361,
+    "LongDecimal": -6.176625,
+    "AltitudeMSL": 2000,
+    "AltitudeAGL": null
+  },
+  {
+    "ID": "EIDW_RW",
+    "Name": "DUBLIN INTERNATIONAL RW 34",
+    "LatDecimal": 53.420233,
+    "LongDecimal": -6.249750,
+    "AltitudeMSL": 500,
+    "AltitudeAGL": null
+  }
+]

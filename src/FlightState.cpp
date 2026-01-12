@@ -7,7 +7,7 @@
 #include <optional>
 
 Knots cessna172_VRoateSpeed = 55;
-Knots cessna172_CruiseSpeed = 80;
+Knots cessna172_CruiseSpeed = 104;
 FeetPerMinute cessna172_InitialClimbRateFpm = 900;
 FeetPerMinute cessna172_ClimbToAltitudeRateFpm = 700;
 Feet cessna172_InitialClimbAltitudeFt = 500;
